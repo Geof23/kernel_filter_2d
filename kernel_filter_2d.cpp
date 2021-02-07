@@ -84,7 +84,7 @@ struct view {
     stride(stride), array(move(array)){}
   size_t stride;
   C array;
-  const typename C::value_type
+  const typename C::value_type&
   operator()(int x, int y) const{
     return array[x + (y*stride)];
   }
