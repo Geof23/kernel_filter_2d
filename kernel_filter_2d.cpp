@@ -90,15 +90,8 @@ operator*(const M& lhs, const kernel<K>& rhs){
   for(int y = 0; y < rhs.w; ++y)
     for(int x = 0; x < rhs.w; ++x){
       rv += lhs(x,y) * rhs(x,y);
-      // cout << "**" << rv.r << ":" << rv.g << ":" << rv.b << '\n';
     }
   rv *= rhs.fact;
-  // cout << "**" << rv.r << ":" << rv.g << ":" << rv.b << '\n';
-  // cout << "from convolution: "
-  //      << rv.r * rhs.fact << ":"
-  //      << rv.g * rhs.fact << ":"
-  //      << rv.b * rhs.fact << '\n';
-  // return rv * rhs.fact;
   return rv;
 }
 
@@ -144,27 +137,13 @@ class filter {
   squash(){ //clamping the output to r8g8b8a8
     auto sp = dpixels.begin();
     auto op = opixels.begin();
-    // int x = 0;
     for(; sp < dpixels.end(); ++sp,++op){
-
       op->r = min(255, max(0, sp->r));
       op->g = min(255, max(0, sp->g));
       op->b = min(255, max(0, sp->b));
       //HACK png uses alpha -- some filters end up setting to 0 (like edge filters)
       op->a = 255; //min(255, max(0, sp->a));
-      // cout << (int)sp->r << ":" << (int)sp->g << ":" << (int)sp->b << ":" << (int)sp->a << " ";
-      // ss << (int)op->r << ":" << (int)op->g << ":" << (int)op->b << ":" << (int)op->a << " ";
-      // if(++x >= image.width()){
-      // 	cout << '\n';
-      // 	cout << ss.str() << '\n';
-      // 	ss.str("");
-      // 	x = 0;
-      // }
-      // cout << sp->r << ":" << sp->g << ":" << sp->b << " to "
-      // 	   << (int)op->r << ":" << (int)op->g << ":" << (int)op->b << "   " <<
-      // 	(++x < image.width()?"\n":"");
     }
-    cout << '\n';
   }
 public:
   filter(string inpath):
@@ -184,13 +163,8 @@ public:
     
     dpixels.resize(image.height()*image.width());
     opixels.resize(image.height()*image.width());
-    
-    //this shows how to get available pixel types for output for the given codec / input pixel
-    //type
-    auto vi = codec_info.write_features().pixel_formats_mappings().find(SAIL_PIXEL_FORMAT_BPP32_RGBA);
-    codec_info.write_features().to_write_options(&write_options);
-    // write_options = write_options.with_output_pixel_format(SAIL_PIXEL_FORMAT_BPP24_RGB);
 
+    codec_info.write_features().to_write_options(&write_options);
     size_t psize = sizeof(int32_t) * image.height() * image.width();
     srcPixels.reset(::operator new(psize));
     memcpy(srcPixels.get(), image.pixels(), psize);
@@ -222,7 +196,6 @@ public:
 		   srcBegin,
 		   image.width() * image.height() - srcBegin})
 	  * k;
-	// cout << "***" << dp.r << ":" << dp.g << ":" << dp.b << ":" << dp.a << '\n';
       }
     }
     return *this;
