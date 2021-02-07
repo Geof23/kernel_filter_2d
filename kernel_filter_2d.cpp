@@ -7,7 +7,6 @@
 #include <cstring>
 #include <new>
 #include <memory>
-#include <sstream>
 
 using namespace std;
 
@@ -20,7 +19,8 @@ struct pixela {
   T b;
   T a;
   pixela():
-    r(0),g(0),b(0),a(0){}  pixela(T r, T g, T b, T a):
+    r(0),g(0),b(0),a(0){}
+  pixela(T r, T g, T b, T a):
       r(r),g(g),b(b),a(a){}
   template <typename R>
   void
@@ -42,36 +42,6 @@ struct pixela {
     g += rhs.g;
     b += rhs.b;
     a += rhs.a;
-  }
-};
-
-template <typename T>
-struct pixel {
-  T r;
-  T g;
-  T b;
-  pixel():
-    r(0),g(0),b(0){}
-  pixel(T r, T g, T b):
-    r(r),g(g),b(b){}
-  template <typename R>
-  void
-  operator*=(const R s){
-    r *= s;
-    g *= s;
-    b *= s;
-  }
-  template <typename R>
-  pixel<R>
-  operator*(R s) const{
-    return pixel<R>(r*s, g*s, b*s);
-  }
-  template <typename R>
-  void
-  operator+=(pixel<R> const& rhs){
-    r += rhs.r;
-    b += rhs.b;
-    g += rhs.g;
   }
 };
 
@@ -131,7 +101,6 @@ class filter {
   kernel<intp_t> k;
   vector<intpix_t> dpixels;
   vector<spix_t> opixels;
-  stringstream ss;
 
   void
   squash(){ //clamping the output to r8g8b8a8
@@ -146,14 +115,14 @@ class filter {
     }
   }
 public:
-  filter(string inpath):
+  filter(const string inpath):
     fext{inpath.substr(inpath.find_last_of('.')+1, string::npos)},
     inpath{inpath}, outpath{},
     image{}, codec_info{}, write_options{},
     srcPixels{nullptr,::operator delete}, k{}, dpixels{}, opixels{}
   {
     sail::image_reader reader;
-    sail::codec_info::from_extension(fext.c_str(), &codec_info);
+    sail::codec_info::from_extension(fext, &codec_info);
     sail::read_options read_options;
     codec_info.read_features().to_read_options(&read_options);
     read_options = read_options.with_output_pixel_format(SAIL_PIXEL_FORMAT_BPP32_RGBA);
@@ -165,7 +134,7 @@ public:
     opixels.resize(image.height()*image.width());
 
     codec_info.write_features().to_write_options(&write_options);
-    size_t psize = sizeof(int32_t) * image.height() * image.width();
+    size_t psize = 4 * image.height() * image.width();
     srcPixels.reset(::operator new(psize));
     memcpy(srcPixels.get(), image.pixels(), psize);
     
@@ -173,7 +142,7 @@ public:
   }
   
   filter&
-  process(kernel<intp_t> kin){
+  process(const kernel<intp_t> kin){
     k = kin;
     outpath = {inpath.
 	    substr(0,inpath.find_last_of('.')) +
@@ -201,7 +170,7 @@ public:
     return *this;
   }
 
-  filter&
+  void
   write(){
     squash();
     sail::image_writer writer;
@@ -210,7 +179,6 @@ public:
     writer.write_next_frame(image.with_shallow_pixels(opixels.data()));
 
     writer.stop_writing();
-    return *this;
   }
 };
 
@@ -261,16 +229,14 @@ main(int argc, char* argv[]){
        6,24,36,24,6,
        4,16,24,16,4,
        1,4,6,4,1},
-      5,
-      1.f/256.f,
+      5, 1.f/256.f,
       "GaussianBlur_5x5"},
      {{1,4,6,4,1,
        4,16,24,16,4,
        6,24,-476,24,6,
        4,16,24,16,4,
        1,4,6,4,1},
-      5,
-      -1.f/256.f,
+      5, -1.f/256.f,
       "UnsharpMasking_5x5"}
     };
   filter f(argv[1]);
