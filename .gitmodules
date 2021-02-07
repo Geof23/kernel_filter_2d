@@ -1,0 +1,3 @@
+[submodule "external/sail"]
+	path = external/sail
+	url = git@github.com:Geof23/sail.git
