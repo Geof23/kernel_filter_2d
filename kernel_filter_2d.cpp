@@ -83,7 +83,7 @@ struct view {
   view(size_t stride, C&& array):
     stride(stride), array(move(array)){}
   size_t stride;
-  C array;
+  const C array;
   const typename C::value_type&
   operator()(int x, int y) const{
     return array[x + (y*stride)];
@@ -104,9 +104,9 @@ class filter {
 
   void
   squash(){ //clamping the output to r8g8b8a8
-    auto sp = dpixels.begin();
+    auto sp = dpixels.cbegin();
     auto op = opixels.begin();
-    for(; sp < dpixels.end(); ++sp,++op){
+    for(; sp < dpixels.cend(); ++sp,++op){
       op->r = min(255, max(0, sp->r));
       op->g = min(255, max(0, sp->g));
       op->b = min(255, max(0, sp->b));
