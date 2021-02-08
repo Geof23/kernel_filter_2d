@@ -1,1 +1,2 @@
-set args /mnt/c/Users/geofs/OneDrive/Pictures/mouseFace.jpg
+set args /mnt/c/Users/geofs/OneDrive/Pictures/y*.jpg
+
