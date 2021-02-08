@@ -91,7 +91,7 @@ The image processing library that this project depends on, `sail`, is built with
 at this time, is built with a GNU Makefile.  However, there is a bash script included that will do
 the heavy lifting.
 
-Continuing in the Ubuntu bash shell, hoose a directory to build in and clone the Github project:
+Continuing in the Ubuntu bash shell, choose a directory to build in and clone the Github project:
 
 ```
 cd /mnt/c
