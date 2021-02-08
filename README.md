@@ -39,19 +39,22 @@ The general form is this:
 Where the matrix `x[mn]` is a submatrix of the target image, n = m, and the target pixel
 is at [m/2][n/2].  The matrix `y[mn]` is the kernel to be applied.
 
-Sample results:
+Sample results: (thanks to "Leica D-Lux 5 (non processed JPEGS)" by soelin is licensed under CC BY 2.0", 
+for the source image, which is available [here](https://search.creativecommons.org/photos/3c92b939-0991-4299-833e-361304e72f5b).  
+These images are also available under `CC BY 2.0` and [doc](https://github.com/Geof23/kernel_filter_2d/tree/main/doc))
 
-| kernel name         | Image                                                                                   |
+| kernel name         | image                                                                                   |
 |---------------------|-----------------------------------------------------------------------------------------|
-| Identity            | !(ident)[https://github.com/Geof23/kernel_filter_2d/blob/main/doc/pinball_Identity.jpg] |
-| Edge D              | !(ident)[https://github.com/Geof23/kernel_filter_2d/blob/main/doc/pinball_Identity.jpg] |
-| Edge L              | !(ident)[https://github.com/Geof23/kernel_filter_2d/blob/main/doc/pinball_Identity.jpg] |
-| Edge C              | !(ident)[https://github.com/Geof23/kernel_filter_2d/blob/main/doc/pinball_Identity.jpg] |
-| Sharpen             | !(ident)[https://github.com/Geof23/kernel_filter_2d/blob/main/doc/pinball_Identity.jpg] |
-| Box blur            | !(ident)[https://github.com/Geof23/kernel_filter_2d/blob/main/doc/pinball_Identity.jpg] |
-| Gaussian blur 3x3   | !(ident)[https://github.com/Geof23/kernel_filter_2d/blob/main/doc/pinball_Identity.jpg] |
-| Gaussian blur 5x5   | !(ident)[https://github.com/Geof23/kernel_filter_2d/blob/main/doc/pinball_Identity.jpg] |
-| Unsharp masking 5x5 | !(ident)[https://github.com/Geof23/kernel_filter_2d/blob/main/doc/pinball_Identity.jpg] |
+| Identity            | ![ident](https://github.com/Geof23/kernel_filter_2d/blob/main/doc/pinball_Identity.jpg)  |
+| Edge D              | ![edgd](https://github.com/Geof23/kernel_filter_2d/blob/main/doc/pinball_EdgeD.jpg)    |
+| Edge L              | ![edgl](https://github.com/Geof23/kernel_filter_2d/blob/main/doc/pinball_EdgeL.jpg) |
+| Edge C              | ![edgc](https://github.com/Geof23/kernel_filter_2d/blob/main/doc/pinball_EdgeC.jpg) |
+| Sharpen             | ![sharp](https://github.com/Geof23/kernel_filter_2d/blob/main/doc/pinball_Sharpen.jpg) |
+| Box blur            | ![bblur](https://github.com/Geof23/kernel_filter_2d/blob/main/doc/pinball_BoxBlur.jpg) |
+| Gaussian blur 3x3   | ![gblur3](https://github.com/Geof23/kernel_filter_2d/blob/main/doc/pinball_GaussianBlur_3x3.jpg) |
+| Gaussian blur 5x5   | ![gblur5](https://github.com/Geof23/kernel_filter_2d/blob/main/doc/pinball_GaussianBlur_5x5.jpg) |
+| Unsharp masking 5x5 | ![umask5](https://github.com/Geof23/kernel_filter_2d/blob/main/doc/pinball_UnsharpMasking_5x5.jpg) |
+
 
 ### <a name="prerequisites">Prerequisites</a>
 
@@ -170,11 +173,11 @@ abstract the datatypes used in your code.
 
 The primary class that does the work to load an image, apply the filter, and then save
 the processed file is called `filter`.  If you go to the bottom of the source code file
-(use an editor of your choice, such as (`emacs`)[https://xkcd.com/378/], `vim`, or
+(use an editor of your choice, such as [`emacs`](https://xkcd.com/378/), `vim`, or
 `VS Code` (beyond the scope of this README, but there are many helpful articles on
 The Google)), you will find the `main` function:
 
-```
+```c++
 int
 main(int argc, char* argv[]){
   sail_set_log_barrier(SAIL_LOG_LEVEL_SILENCE);
@@ -208,9 +211,9 @@ The `process` method (of `filter`) iterates over all of the pixels in the source
 creating a new image in the object `dpixels`.  This object stores the pixels at a higher
 resolution than the source image in order to provide some headroom for processing
 (for instance, some kernels can produce pixel values that are too large to fit in 8 bits
-per channel) and also to allow for negative values.  Usually a kernel that contains large coefficients or is large, so that a lot
-of products are stored in each pixel, also have a small 'global coefficient' that is multiplied
-with this final sum, and may enable the pixel values to fit back in the 8 bit/channel pixels that we are writing for our
+per channel) and also to allow for negative values.  Usually a kernel that contains large coefficients or is dimensionally large, 
+such that many products are stored in each pixel, also have a small 'global coefficient' that is multiplied
+with this final sum (pixel convolution), and may enable the pixel values to fit back in the 8 bit/channel pixels that we are writing for our
 filtered image (and possibly 'flip' negative values to the other side of zero).
 
 However, in cases where the final processed pixels are too large our otherwise out of range for
