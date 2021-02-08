@@ -162,7 +162,7 @@ applying UnsharpMasking_5x5g
 ### <a name="how-it-works">How the program works</a>
 
 The program is written in a single `.cpp` file, `kernel_filter_2d.cpp`, that contains
-the `#include` statement for the dependent headers (from both the c++ library and sail),
+the `#include` statements for the header dependencies (from both the c++ library and sail),
 a few structs, a class, and the `main` function.
 
 It is built with the `c++20` specification, in
@@ -216,8 +216,8 @@ such that many products are stored in each pixel, also have a small 'global coef
 with this final sum (pixel convolution), and may enable the pixel values to fit back in the 8 bit/channel pixels that we are writing for our
 filtered image (and possibly 'flip' negative values to the other side of zero).
 
-However, in cases where the final processed pixels are too large our otherwise out of range for
-the destination image format, the values are 'clamped' to fit in 8 bit values (0 - 255).  This means
+However, in cases where the final processed pixels are too large or otherwise out of range for
+the destination image format, the values (for each channel) are 'clamped' to fit in 8 bit values (0 - 255).  This means
 that there is no effort to scale the range of the pixels to fit in the target precision (which is another
 approach)-- intermediate values
 over 255 are written as 255, and intermediate values less than 0 are written as 0 to the destination image.
