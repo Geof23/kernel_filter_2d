@@ -1,10 +1,15 @@
 ## Filtering Images with 2d Kernels
 
 [Introduction](#introduction)
+
 [Prerequisites](#prerequisites)
+
 [Building](#building)
+
 [Running the tool](#how-to-run-it)
+
 [How it works](#how-it-works)
+
 [Summary](#summary)
 
 ### <a name="introduction">Introduction</a>
@@ -239,8 +244,10 @@ as a new image.
 
 It is a lot of fun to see how these filters work.  Some images may be too blury to begin with
 to see the results of blur filters (you can increase the magnitude of the kernel matrix coefficients
-to have a greater effect).  Also, some images will lack well defined edges for the edge filters to
-highlight, and you may be left with little more than a black image from them.
+to have a greater effect, or expand the size of the kernels to be 5x5, 7x7, etc, keeping the dimensions
+odd, so that there is a center entry to provide symmetry about each target pixel).
+Also, some images will lack well defined edges for the edge filters to
+detect, and you may be left with little more than a black image product.
 
 This is an introduction to convolution kernels.  They are important in many areas of computation,
 such as convolutional neural networks, in order to extract features from data sets in Machine Learning
