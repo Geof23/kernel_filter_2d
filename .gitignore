@@ -1,4 +1,5 @@
 *.o
 kernel_filter_2d
 *~
-#*
+\#*
+.\#*
