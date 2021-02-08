@@ -254,5 +254,5 @@ detect, and you may be left with little more than a black image product.
 
 This is an introduction to convolution kernels.  They are important in many areas of computation,
 such as convolutional neural networks, in order to extract features from data sets in Machine Learning
-applications.  There are [many](https://towardsdatascience.com/intuitively-understanding-convolutions-for-deep-learning-1f6f42faee1)
+applications (for example).  There are many [(here's one)](https://towardsdatascience.com/intuitively-understanding-convolutions-for-deep-learning-1f6f42faee1)
 articles available on the subject
